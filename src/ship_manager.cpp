@@ -1,5 +1,6 @@
 #include <iostream>
 #include "ship_manager.hpp"
+#include "local_exceptions.hpp"
 
 ShipManager::ShipManager(Field &field, std::map<unsigned int, unsigned int> ships)
 {
@@ -29,7 +30,17 @@ bool ShipManager::place_ship(Ship ship, unsigned int y, unsigned int x, char shi
         throw std::invalid_argument("The orientation of the ship must be h-horizontal or v-vertical");
     }
     placed_ships.push_back(ship);
-    if (!(*manager_field).place_ship(placed_ships.back(), y, x, ship_orientation))
+    bool place_flag;
+    try
+    {
+        place_flag = (*manager_field).place_ship(placed_ships.back(), y, x, ship_orientation);
+    }
+    catch(const ConflictShipPlacementException& e)
+    {
+        placed_ships.pop_back();
+        throw ConflictShipPlacementException();
+    }
+    if (!place_flag)
     {
         placed_ships.pop_back();
         return 0;
