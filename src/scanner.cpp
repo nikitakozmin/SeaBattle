@@ -2,9 +2,9 @@
 #include <limits>
 #include "scanner.hpp"
 
-Scanner::Scanner(Field &field)
+Scanner::Scanner(Field **field)
 {
-    manager_field = &field;
+    manager_field = field;
 }
 
 void Scanner::use_ability()
@@ -29,8 +29,8 @@ void Scanner::use_ability()
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очищаем буфер ввода
         std::cin >> x;
     }
-    if (manager_field->check_ship(y, x)||manager_field->check_ship(y+1, x)||
-        manager_field->check_ship(y, x+1)||manager_field->check_ship(y+1, x+1)
+    if ((*manager_field)->check_ship(y, x)||(*manager_field)->check_ship(y+1, x)||
+        (*manager_field)->check_ship(y, x+1)||(*manager_field)->check_ship(y+1, x+1)
     )
     {
         std::cout << "The ship has been found in a two by two field" << std::endl;

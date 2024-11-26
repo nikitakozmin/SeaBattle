@@ -7,9 +7,9 @@
 class Bombardment : public Ability
 {
 private:
-    std::vector<Ship> *ships = nullptr;
+    std::vector<Ship> **ships = nullptr;
 public:
-    Bombardment(std::vector<Ship> &placed_ships);
+    Bombardment(std::vector<Ship> **placed_ships);
     void use_ability() override;
     std::unique_ptr<Ability> clone() const override;
 };

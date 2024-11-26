@@ -15,11 +15,11 @@ private:
 public:
     //                  Field. Ship length, number
     ShipManager(Field &field, std::map<unsigned int, unsigned int> ships = {{4, 1}, {3, 2}, {2, 3}, {1, 4}});
-    std::vector<Ship> &get_unplaced_ships();
     std::vector<Ship> &get_placed_ships();
     //              Start from the top left corner. Ship_orientation = 'h' || 'v'
     bool place_ship(Ship ship, unsigned int y, unsigned int x, char ship_orientation='h');
     void updating_dependencies_placed_ships();
+    void placement_of_ships(bool is_random = false);
 };
 
 #endif

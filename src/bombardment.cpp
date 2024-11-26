@@ -2,23 +2,23 @@
 #include "bombardment.hpp"
 #include "ship.hpp"
 
-Bombardment::Bombardment(std::vector<Ship> &placed_ships)
+Bombardment::Bombardment(std::vector<Ship> **placed_ships)
 {
-    ships = &placed_ships;
+    ships = placed_ships;
 }
 
 void Bombardment::use_ability()
 {
-    if (ships->empty())
+    if ((*ships)->empty())
     {
         throw std::overflow_error("No ship available");
     }
     std::random_device rd;
     std::mt19937 gen(rd());
 
-    std::uniform_int_distribution<size_t> dist_ships(0, ships->size() - 1);
+    std::uniform_int_distribution<size_t> dist_ships(0, (*ships)->size() - 1);
     size_t random_ship_index = dist_ships(gen);
-    Ship &random_ship = (*ships)[random_ship_index];
+    Ship &random_ship = (**ships)[random_ship_index];
 
     std::uniform_int_distribution<size_t> dist_segments(0, random_ship.get_length() - 1);
     size_t random_segment_index = dist_segments(gen);

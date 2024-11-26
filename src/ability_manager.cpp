@@ -10,9 +10,9 @@ AbilityManager::AbilityManager(Field &field, std::vector<Ship> &placed_ships)
 {
     manager_field = &field;
     ships = &placed_ships;
-    ability_vector.push_back(std::make_unique<DoubleDamage>(*manager_field));
-    ability_vector.push_back(std::make_unique<Scanner>(*manager_field));
-    ability_vector.push_back(std::make_unique<Bombardment>(*ships));
+    ability_vector.push_back(std::make_unique<DoubleDamage>(&manager_field));
+    ability_vector.push_back(std::make_unique<Scanner>(&manager_field));
+    ability_vector.push_back(std::make_unique<Bombardment>(&ships));
     std::shuffle(ability_vector.begin(), ability_vector.end(), std::mt19937(std::random_device{}()));
     for (auto &ptr : ability_vector)
     {
@@ -38,4 +38,10 @@ std::unique_ptr<Ability> AbilityManager::get_ability()
     std::unique_ptr<Ability> ptr = std::move(ability_queue.front());
     ability_queue.pop();
     return ptr;
+}
+
+void AbilityManager::set_new_parameters(Field &new_manager_field, std::vector<Ship> &new_ships)
+{
+    manager_field = &new_manager_field;
+    ships = &new_ships;
 }

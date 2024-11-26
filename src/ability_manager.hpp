@@ -19,6 +19,7 @@ public:
     AbilityManager(Field &field, std::vector<Ship> &placed_ships);
     void add_random_ability();
     std::unique_ptr<Ability> get_ability();
+    void set_new_parameters(Field &new_manager_field, std::vector<Ship> &new_ships);
 };
 
 #endif

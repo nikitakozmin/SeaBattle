@@ -6,9 +6,9 @@
 class Scanner : public Ability
 {
 private:
-    Field *manager_field = nullptr;
+    Field **manager_field = nullptr;
 public:
-    Scanner(Field &field);
+    Scanner(Field **field);
     void use_ability() override;
     std::unique_ptr<Ability> clone() const override;
 };

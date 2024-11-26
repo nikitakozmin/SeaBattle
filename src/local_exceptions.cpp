@@ -1,7 +1,7 @@
 #include "local_exceptions.hpp"
 
 BaseException::BaseException(const std::string &msg) : message(msg) {};
-const char* BaseException::what() const 
+const char* BaseException::what() const noexcept 
 {
         return message.c_str();
 }

@@ -4,13 +4,13 @@
 #include <iostream>
 #include <string>
 
-class BaseException {
+class BaseException : public std::exception {
 protected:
     std::string message;
 
 public:
     explicit BaseException(const std::string &msg);
-    virtual const char* what() const;
+    virtual const char* what() const noexcept override;
 };
 
 

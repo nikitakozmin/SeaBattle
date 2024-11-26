@@ -1,10 +1,10 @@
 CC = g++
-CFLAGS = #-Wall -Wextra
+CFLAGS = -std=c++20#-Wall -Wextra
 EXE = cw.exe
 
 all: $(EXE)
 
-$(EXE): main.o ship.o field.o ship_manager.o ability_manager.o double_damage.o scanner.o bombardment.o local_exceptions.o
+$(EXE): main.o ship.o field.o ship_manager.o ability_manager.o double_damage.o scanner.o bombardment.o local_exceptions.o game.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 main.o: main.cpp
@@ -32,6 +32,9 @@ bombardment.o: bombardment.cpp bombardment.hpp ability.hpp
 	$(CC) $(CFLAGS) -c $^
 
 local_exceptions.o: local_exceptions.cpp local_exceptions.hpp
+	$(CC) $(CFLAGS) -c $^
+
+game.o: game.cpp game.hpp
 	$(CC) $(CFLAGS) -c $^
 
 clear:
