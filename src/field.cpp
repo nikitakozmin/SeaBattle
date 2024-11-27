@@ -1,5 +1,5 @@
 #include <string>
-#include <format>
+#include <iomanip>
 #include "field.hpp"
 #include "local_exceptions.hpp"
 
@@ -251,75 +251,79 @@ bool Field::has_ship_hp(unsigned int y, unsigned int x)
 
 std::string Field::open_visualize()
 {
-    unsigned int len_height = std::to_string(get_height()-1).size();
-    unsigned int len_width = std::to_string(get_height()-1).size();
-    std::string rslt(len_height, ' ');
-    rslt += "     ";
+    unsigned int len_height = std::to_string(get_height() - 1).size();
+    unsigned int len_width = std::to_string(get_width() - 1).size();
+
+    std::ostringstream oss;
+
+    oss << std::string(len_height, ' ') << "     ";
     for (int i = 0; i < get_width(); ++i)
     {
-        rslt += std::format("{:0>{}}  ", i, len_width);
+        oss << std::setw(len_width) << std::setfill('0') << i << "  ";
     }
-    rslt += '\n';
-    rslt += std::string(len_height, ' ');
-    rslt += "     ";
+    oss << '\n';
+
+    oss << std::string(len_height, ' ') << "     ";
     for (int i = 0; i < get_width(); ++i)
     {
-        rslt += std::format("{:->{}}  ", '-', len_width);
+        oss << std::setw(len_width) << std::setfill('-') << "-" << "  ";
     }
-    rslt += '\n';
+    oss << '\n';
+
     unsigned int i = 0;
-    for (std::vector<Field::Cell> line: cells)
+    unsigned int hp;
+    for (const auto &line : cells)
     {
-        rslt += std::format("{:0>{}}  ", i, len_height) + "|  ";
-        for (Field::Cell cell: line)
+        oss << std::setw(len_height) << std::setfill('0') << i << "  |  ";
+        for (const auto &cell : line)
         {
             if (cell.has_ship())
             {
-                rslt += std::format("{:>{}}  ", cell.get_segment().get_segment_hp(), len_width);
+                hp = const_cast<Field::Cell&>(cell).get_segment().get_segment_hp();
+                oss << std::setw(len_width) << std::setfill(' ') << hp << "  ";
             }
             else if (cell.get_value() == '_')
             {
-                rslt += std::format("{:>{}}  ", '_', len_width);
+                oss << std::setw(len_width) << std::setfill(' ') << '_' << "  ";
             }
             else
             {
-                rslt += std::format("{:>{}}  ", '~', len_width);
+                oss << std::setw(len_width) << std::setfill(' ') << '~' << "  ";
             }
         }
-        rslt += '\n';
-        i++;
+        oss << '\n';
+        ++i;
     }
-    return rslt;
+
+    return oss.str();
 }
 
 std::ostream& operator << (std::ostream &strm, const Field &field)
 {
     unsigned int len_height = std::to_string(field.get_height()-1).size();
     unsigned int len_width = std::to_string(field.get_height()-1).size();
-    std::string rslt(len_height, ' ');
-    rslt += "     ";
+    strm << std::string(len_height, ' ') << "     ";
     for (int i = 0; i < field.get_width(); ++i)
     {
-        rslt += std::format("{:0>{}}  ", i, len_width);
+        strm << std::setw(len_width) << std::setfill('0') << i << "  ";
     }
-    rslt += '\n';
-    rslt += std::string(len_height, ' ');
-    rslt += "     ";
+    strm << '\n';
+    strm << std::string(len_height, ' ') << "     ";
     for (int i = 0; i < field.get_width(); ++i)
     {
-        rslt += std::format("{:->{}}  ", '-', len_width);
+        strm << std::setw(len_width) << std::setfill('-') << "-" << "  ";
     }
-    rslt += '\n';
+    strm << '\n';
     unsigned int i = 0;
     for (std::vector<char> line: field.get_cell_values())
     {
-        rslt += std::format("{:0>{}}  ", i, len_height) + "|  ";
-        for (char value: line)
+        strm << std::setw(len_height) << std::setfill('0') << i << "  |  ";
+        for (char value : line)
         {
-            rslt += std::format("{:>{}}  ", value, len_width);
+            strm << std::setw(len_width) << std::setfill(' ') << value << "  ";
         }
-        rslt += '\n';
+        strm << '\n';
         i++;
     }
-    return strm << rslt;
+    return strm;
 }

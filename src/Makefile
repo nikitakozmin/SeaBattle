@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++20#-Wall -Wextra
+CFLAGS =#-Wall -Wextra
 EXE = cw.exe
 
 all: $(EXE)

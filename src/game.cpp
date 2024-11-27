@@ -157,6 +157,7 @@ void Game::attack_with_ability_charge(Field *opponent_field, AbilityManager *abi
     std::cout << "Current enemy field:" << std::endl;
     std::cout << *opponent_field << std::endl;
 }
+
  
 void Game::start_game()
 {
@@ -172,7 +173,11 @@ void Game::start_game()
 
     while (true)
     {
+        std::cout << "Enemy field:" << std::endl;
+        std::cout << *enemy_field << std::endl;
+
         take_ability(player_ability_manager);
+
 
         attack_with_ability_charge(enemy_field, player_ability_manager);
 
@@ -197,7 +202,8 @@ void Game::start_game()
         player_field->attack(attack_y, attack_x);
         std::cout << "Your new field:" << std::endl;
         std::cout << player_field->open_visualize() << std::endl;
-
+        std::this_thread::sleep_for(2000ms);
+        
         if (check_win(player_ship_manager))
         {
             std::cout << "Unfortunately you lost, let's update your field" << std::endl;
