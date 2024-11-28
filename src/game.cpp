@@ -6,15 +6,90 @@
 #include <numeric>
 #include "game.hpp"
 #include "local_exceptions.hpp"
+#include "game_state.hpp"
 
 using namespace std::chrono_literals;
 
+bool Game::loading_latest_game()
+{
+    char selected;
+    std::cout << "Load latest game? [Y/n]:" << std::endl;
+    while (true)
+    {
+        std::cin >> selected;
+        if (selected == 'y' || selected == 'Y')
+        {
+            GameState game_state{};
+            try
+            {
+                game_state.from_json(game_state.load_from_file("last save.json"));
+                game_state.update_game(player_field, enemy_field, player_ship_manager, enemy_ship_manager, player_ability_manager); // TODO: (Приоритет: max) Добавление абилок
+                std::cout << "Game state loaded to 'last save.json'" << std::endl;
+                return true;
+            }
+            catch (const std::exception& ex)
+            {
+                std::cerr << "Error: " << ex.what() << std::endl;
+                std::cout << "Let's continue new game" << std::endl;
+                return false;
+            }
+        }
+        else if (selected == 'n' || selected == 'N')
+        {
+            return false;
+        }
+        else
+        {
+            std::cerr << "Invalid input. Please enter Y or n." << std::endl;
+        }
+    }
+}
+
+bool Game::saving_latest_game()
+{
+    char selected;
+    std::cout << "Save latest game? [Y/n]:" << std::endl;
+    while (true)
+    {
+        std::cin >> selected;
+        if (selected == 'y' || selected == 'Y')
+        {
+        GameState game_state(player_field, enemy_field, player_ability_manager);
+        try
+        {
+            game_state.save_to_file("last save.json");
+            std::cout << "Game state saved to 'last save.json'" << std::endl;
+            return true;
+        }
+        catch (const std::exception& ex)
+        {
+            std::cerr << "Error: " << ex.what() << std::endl;
+            std::cout << "Let's continue" << std::endl;
+        }
+        }
+        else if (selected == 'n' || selected == 'N')
+        {
+            return false;
+        }
+        else
+        {
+            std::cerr << "Invalid input. Please enter Y or n." << std::endl;
+        }
+    }
+}
+
 Game::Game()
 {
-    bool is_random = true; // Стоит true, так как так быстрее тестировать
-    creating_player_objects(is_random);
-    creating_enemy_objects();
-    player_ability_manager = new AbilityManager{*enemy_field, enemy_ship_manager->get_placed_ships()};
+    if (!loading_latest_game())
+    {
+        bool is_random = false; // Стоит true, так как так быстрее тестировать
+        creating_player_objects(is_random);
+        creating_enemy_objects();
+        player_ability_manager = new AbilityManager{*enemy_field, enemy_ship_manager->get_placed_ships()};  // TODO: (Приоритет: max) Перенос абилок
+    }
+    std::cout << "Your field:" << std::endl;
+    std::cout << player_field->open_visualize() << std::endl;
+    std::this_thread::sleep_for(2000ms);
 }
 
 void Game::placement_of_ships(ShipManager *ship_manager, bool is_random)
@@ -101,7 +176,6 @@ void Game::take_ability(AbilityManager *ability_manager)
         }
         else if (selected_ability == 'n' || selected_ability == 'N')
         {
-
             break;
         }
         else
@@ -115,29 +189,29 @@ void Game::attack_with_ability_charge(Field *opponent_field, AbilityManager *abi
 {
     unsigned int attack_y;
     unsigned int attack_x;
-    std::cout << "Attack:" << std::endl;
-    std::cout << "Input: y (index)" << std::endl;
-    std::cin >> attack_y;
-    while (std::cin.fail())
-    {
-        std::cerr << "Invalid_argument for y, try again" << std::endl;
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очищаем буфер ввода
-        std::cin >> attack_y;
-    }
-    std::cout << "Input: x (index)" << std::endl;
-    std::cin >> attack_x;
-    if (std::cin.fail())
-    {
-        std::cerr << "Invalid_argument for x, try again" << std::endl;
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очищаем буфер ввода
-        std::cin >> attack_x;
-    }
     bool was_ship_hp;
-    was_ship_hp = opponent_field->has_ship_hp(attack_y, attack_x);
+    std::cout << "Attack:" << std::endl;
     while (true)
     {
+        std::cout << "Input: y (index)" << std::endl;
+        std::cin >> attack_y;
+        while (std::cin.fail())
+        {
+            std::cerr << "Invalid_argument for y, try again" << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очищаем буфер ввода
+            std::cin >> attack_y;
+        }
+        std::cout << "Input: x (index)" << std::endl;
+        std::cin >> attack_x;
+        if (std::cin.fail())
+        {
+            std::cerr << "Invalid_argument for x, try again" << std::endl;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Очищаем буфер ввода
+            std::cin >> attack_x;
+        }
+        was_ship_hp = opponent_field->has_ship_hp(attack_y, attack_x);
         try
         {
             opponent_field->attack(attack_y, attack_x); // TODO: Подумать над добавлением ограничения по повторному попаданию
@@ -161,6 +235,19 @@ void Game::attack_with_ability_charge(Field *opponent_field, AbilityManager *abi
  
 void Game::start_game()
 {
+    // // Пример работы потока вывода
+    // GameState game_state(player_field, enemy_field, player_ability_manager);
+    // std::ofstream out_file("game_state.json");
+    // out_file << game_state;
+    // out_file.close();
+
+    // // Пример работы потока ввода
+    // GameState game_state{};
+    // std::ifstream in_file("game_state.json");
+    // in_file >> game_state;
+    // std::cout << game_state;
+    // in_file.close();
+
     unsigned int attack_y;
     unsigned int attack_x;
     char cell_value;
@@ -172,12 +259,11 @@ void Game::start_game()
     unsigned long int p;
 
     while (true)
-    {
+    {        
         std::cout << "Enemy field:" << std::endl;
         std::cout << *enemy_field << std::endl;
-
+        
         take_ability(player_ability_manager);
-
 
         attack_with_ability_charge(enemy_field, player_ability_manager);
 
@@ -211,6 +297,8 @@ void Game::start_game()
             game.start_game();
             break;
         }
+
+        saving_latest_game();
     }
 }
 

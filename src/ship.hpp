@@ -3,7 +3,6 @@
 
 #include <vector>
 
-
 class Ship
 {
 public:
@@ -23,9 +22,12 @@ public:
     unsigned int get_length() const;
     std::vector<unsigned int> get_segments_hp() const;
     Segment &get_segment(unsigned int index);
+    void set_orientation(char candidate);
+    char get_orientation();
 private:
     unsigned int ship_length;
     std::vector<Segment> segments;
+    char orientation;
 };
 
 #endif

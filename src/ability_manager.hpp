@@ -8,6 +8,7 @@
 #include "ship_manager.hpp"
 #include "ability.hpp"
 
+
 class AbilityManager
 {
 private:
@@ -20,6 +21,7 @@ public:
     void add_random_ability();
     std::unique_ptr<Ability> get_ability();
     void set_new_parameters(Field &new_manager_field, std::vector<Ship> &new_ships);
+    void add_ability(std::string &str);
 };
 
 #endif

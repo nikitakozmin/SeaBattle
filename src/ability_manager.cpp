@@ -45,3 +45,15 @@ void AbilityManager::set_new_parameters(Field &new_manager_field, std::vector<Sh
     manager_field = &new_manager_field;
     ships = &new_ships;
 }
+
+void AbilityManager::add_ability(std::string &str)
+{
+    for (auto &ptr : ability_vector)
+    {
+        if (str == std::string(typeid(*ptr).name()))
+        {
+            ability_queue.push(ptr->clone());
+            break;
+        }
+    }
+}

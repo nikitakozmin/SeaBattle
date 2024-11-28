@@ -67,3 +67,13 @@ Ship::Segment &Ship::get_segment(unsigned int index)
 {
     return segments[index];
 }
+
+void Ship::set_orientation(char candidate)
+{
+    orientation = candidate;
+}
+
+char Ship::get_orientation()
+{
+    return orientation;
+}

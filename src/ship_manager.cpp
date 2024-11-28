@@ -19,6 +19,26 @@ ShipManager::ShipManager(Field &field, std::map<unsigned int, unsigned int> ship
     }
 }
 
+ShipManager::ShipManager(
+    Field &field,
+    std::vector<std::vector<unsigned int>> &hps, 
+    std::vector<unsigned int> &ys, std::vector<unsigned int> &xs, 
+    std::vector<char> &orientations
+)
+{
+    manager_field = &field;
+    for (unsigned int i = 0; i < hps.size(); ++i)
+    {
+        placed_ships.push_back(Ship(hps[i].size()));
+        for (unsigned int j = 0; j < hps[i].size(); ++j)
+        {
+            placed_ships.back().get_segment(j).damage(2-hps[i][j]);
+        }
+        place_ship(placed_ships.back(), ys[i], xs[i], orientations[i]);
+    }
+    updating_dependencies_placed_ships();
+}
+
 std::vector<Ship> &ShipManager::get_placed_ships()
 {
     return placed_ships;
@@ -41,6 +61,7 @@ bool ShipManager::place_ship(Ship ship, unsigned int y, unsigned int x, char shi
         placed_ships.pop_back();
         return 0;
     }
+    placed_ships.back().set_orientation(ship_orientation);
     return 1;
 }
 

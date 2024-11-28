@@ -13,10 +13,11 @@ private:
     Field *enemy_field;
     ShipManager *enemy_ship_manager;
     AbilityManager *player_ability_manager;
-    AbilityManager *enemy_ability_manager;
 
 public:
     Game();
+    bool loading_latest_game();
+    bool saving_latest_game();
     void placement_of_ships(ShipManager *ship_manager, bool is_random);
     void creating_player_objects(bool is_random=false);
     void creating_enemy_objects();

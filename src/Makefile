@@ -4,7 +4,7 @@ EXE = cw.exe
 
 all: $(EXE)
 
-$(EXE): main.o ship.o field.o ship_manager.o ability_manager.o double_damage.o scanner.o bombardment.o local_exceptions.o game.o
+$(EXE): main.o ship.o field.o ship_manager.o ability_manager.o double_damage.o scanner.o bombardment.o local_exceptions.o game.o game_state.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 main.o: main.cpp
@@ -35,6 +35,9 @@ local_exceptions.o: local_exceptions.cpp local_exceptions.hpp
 	$(CC) $(CFLAGS) -c $^
 
 game.o: game.cpp game.hpp
+	$(CC) $(CFLAGS) -c $^
+
+game_state.o: game_state.cpp game_state.hpp
 	$(CC) $(CFLAGS) -c $^
 
 clear:

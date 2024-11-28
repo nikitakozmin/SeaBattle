@@ -298,6 +298,16 @@ std::string Field::open_visualize()
     return oss.str();
 }
 
+Ship::Segment *Field::get_segment(unsigned int y, unsigned int x)
+{
+    return &(cells[y][x].get_segment());
+}
+
+void Field::set_value(char candidate, unsigned int y, unsigned int x)
+{
+    cells[y][x].set_value(candidate);
+}
+
 std::ostream& operator << (std::ostream &strm, const Field &field)
 {
     unsigned int len_height = std::to_string(field.get_height()-1).size();

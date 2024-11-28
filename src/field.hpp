@@ -38,7 +38,9 @@ public:
     void attack(unsigned int y, unsigned int x);
     bool check_ship(unsigned int y, unsigned int x);
     bool has_ship_hp(unsigned int y, unsigned int x);
+    Ship::Segment *get_segment(unsigned int y, unsigned int x);
     std::string open_visualize();
+    void set_value(char candidate, unsigned int y, unsigned int x);
 };
 
 std::ostream& operator << (std::ostream &strm, const Field &field);
