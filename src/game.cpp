@@ -23,7 +23,7 @@ bool Game::loading_latest_game()
             try
             {
                 game_state.from_json(game_state.load_from_file("last save.json"));
-                game_state.update_game(player_field, enemy_field, player_ship_manager, enemy_ship_manager, player_ability_manager); // TODO: (Приоритет: max) Добавление абилок
+                game_state.update_game(player_field, enemy_field, player_ship_manager, enemy_ship_manager, player_ability_manager);
                 std::cout << "Game state loaded to 'last save.json'" << std::endl;
                 return true;
             }
@@ -85,7 +85,7 @@ Game::Game()
         bool is_random = false; // Стоит true, так как так быстрее тестировать
         creating_player_objects(is_random);
         creating_enemy_objects();
-        player_ability_manager = new AbilityManager{*enemy_field, enemy_ship_manager->get_placed_ships()};  // TODO: (Приоритет: max) Перенос абилок
+        player_ability_manager = new AbilityManager{*enemy_field, enemy_ship_manager->get_placed_ships()};
     }
     std::cout << "Your field:" << std::endl;
     std::cout << player_field->open_visualize() << std::endl;
