@@ -22,9 +22,9 @@ bool Game::loading_latest_game()
             GameState game_state{};
             try
             {
-                game_state.from_json(game_state.load_from_file("last save.json"));
+                game_state.from_json(game_state.load_from_file("saves/last save.json"));
                 game_state.update_game(player_field, enemy_field, player_ship_manager, enemy_ship_manager, player_ability_manager);
-                std::cout << "Game state loaded to 'last save.json'" << std::endl;
+                std::cout << "Game state loaded to 'saves/last save.json'" << std::endl;
                 return true;
             }
             catch (const std::exception& ex)
@@ -57,8 +57,8 @@ bool Game::saving_latest_game()
         GameState game_state(player_field, enemy_field, player_ability_manager);
         try
         {
-            game_state.save_to_file("last save.json");
-            std::cout << "Game state saved to 'last save.json'" << std::endl;
+            game_state.save_to_file("saves/last save.json");
+            std::cout << "Game state saved to 'saves/last save.json'" << std::endl;
             return true;
         }
         catch (const std::exception& ex)
@@ -82,7 +82,27 @@ Game::Game()
 {
     if (!loading_latest_game())
     {
-        bool is_random = false; // Стоит true, так как так быстрее тестировать
+        char selected_random;
+        bool is_random;
+        std::cout << "Select random ship placement? [Y/n]:" << std::endl;
+        while (true)
+        {
+            std::cin >> selected_random;
+            if (selected_random == 'y' || selected_random == 'Y')
+            {
+                is_random = true;
+                break;
+            }
+            else if (selected_random == 'n' || selected_random == 'N')
+            {
+                is_random = false;
+                break;
+            }
+            else
+            {
+                std::cerr << "Invalid input. Please enter Y or n." << std::endl;
+            }
+        }
         creating_player_objects(is_random);
         creating_enemy_objects();
         player_ability_manager = new AbilityManager{*enemy_field, enemy_ship_manager->get_placed_ships()};
@@ -112,7 +132,6 @@ void Game::placement_of_ships(ShipManager *ship_manager, bool is_random)
 
 void Game::creating_player_objects(bool is_random)
 {
-    // TODO: (Приоритет: 2) Предоставление возможности выбора размеров поля (те же размеры передавать противнику?)
     while (true)
     {
         try
@@ -127,9 +146,7 @@ void Game::creating_player_objects(bool is_random)
         }
         break;
     }
-    // TODO: (Приоритет: 3) Предоставление возможности выбора кораблей
     player_ship_manager = new ShipManager{*player_field};
-    // TODO: (Приоритет: 1) Предоставление возможности выбора установки кораблей игроком (рандомно | самостоятельно)
     if (!is_random)
     {
         std::cout << "Your field:" << std::endl;
@@ -214,7 +231,7 @@ void Game::attack_with_ability_charge(Field *opponent_field, AbilityManager *abi
         was_ship_hp = opponent_field->has_ship_hp(attack_y, attack_x);
         try
         {
-            opponent_field->attack(attack_y, attack_x); // TODO: Подумать над добавлением ограничения по повторному попаданию
+            opponent_field->attack(attack_y, attack_x);
             break;
         }
         catch(const AtackException& e)

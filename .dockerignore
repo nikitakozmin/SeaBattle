@@ -1,0 +1,13 @@
+.git/
+LICENSE
+*.md
+
+src/*.o
+src/*.gch
+
+src/*.json
+src/sbtl
+src/sbtl.exe
+
+.dockerignore
+Dockerfile

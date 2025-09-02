@@ -1,6 +1,6 @@
 CC = g++
-CFLAGS =#-Wall -Wextra
-EXE = cw.exe
+CFLAGS = #-Wall -Wextra
+EXE = sbtl
 
 all: $(EXE)
 
@@ -41,7 +41,7 @@ game_state.o: game_state.cpp game_state.hpp
 	$(CC) $(CFLAGS) -c $^
 
 clear:
-ifeq ($(EXE),cw.exe)
+ifeq ($(EXE),sbtl.exe)
 	del *.o
 	del *.gch
 else
